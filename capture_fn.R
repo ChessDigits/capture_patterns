@@ -91,3 +91,36 @@ add_rating_buckets <- function(df)
   print("Added variables WhiteElo_bucket and BlackElo_bucket")
   return(df)
 }
+
+#### captures ####
+add_capture_indicator_at_each_ply <- function(df, first_ply=1, last_ply=30*2)
+{
+  # remove previous capture indicators if any
+  df <- df[,!grepl("Capture_ply_", colnames(df))]
+  
+  # get capture indicators
+  cap <- apply(df[paste0("Move_ply_", first_ply:last_ply)], 2, function(col) grepl("x", col))
+  colnames(cap) <- paste0(gsub(pattern = "Move", replacement = "Capture", x = colnames(cap)))
+  df <- cbind(df, cap)
+  
+  # out
+  print(paste0("Added columns Capture_ply_", first_ply, " to Capture_ply_", last_ply))
+  return(df)
+}
+
+
+add_cumulative_captures_at_each_ply <- function()
+{
+  
+}
+
+
+
+#### plots ####
+# helper fn
+get_average_capture_at_each_ply_by <- function(by=rating)
+{
+  
+}
+
+# plot
