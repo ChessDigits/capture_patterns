@@ -11,3 +11,7 @@ https://web.chessdigits.com/articles/...
 df <- load_data(k_games=200, use_local_file=TRUE)
 bu <- df # temp
 df <- remove_abnormal_termination(df)
+df <- restrict_by_rating_differential(df, max_diff=100)
+df <- restrict_by_rating(df, player = "White", min_rating=800, max_rating=2300)
+df <- restrict_by_rating(df, player = "Black", min_rating=800, max_rating=2300)
+df <- add_rating_buckets(df)

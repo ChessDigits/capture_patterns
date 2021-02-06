@@ -45,3 +45,49 @@ remove_abnormal_termination <- function(df)
   return(df)
 }
 
+
+#### ratings ####
+# restrict by rating differential
+restrict_by_rating_differential <- function(df, max_diff)
+{
+  n_pre <- nrow(df)
+  diff <- abs(df$WhiteElo - df$BlackElo)
+  df <- df[diff <= max_diff,]
+  n_post <- nrow(df)
+  
+  # out
+  print(paste0("Removed games where players differed by Elo > ", max_diff, " (n pre = ", n_pre, ", n post = ", n_post, ")"))
+  return(df)
+}
+
+
+# restrict by rating
+restrict_by_rating <- function(df, player=c("White", "Black"), min_rating=900, max_rating=2400)
+{
+  n_pre <- nrow(df)
+  player <- match.arg(player)
+  df <- df[df[paste0(player, "Elo")] < max_rating & df[paste0(player, "Elo")] >= min_rating,]
+  n_post <- nrow(df)
+  
+  # out
+  print(paste0("Removed games where had Elo >= ", max_rating, " (n pre = ", n_pre, ", n post = ", n_post, ")"))
+  return(df)
+}
+
+
+# rating buckets
+add_rating_buckets <- function(df)
+{
+  for (player in c("White", "Black"))
+  {
+    # ordered factor
+    df[,paste0(player, "Elo_bucket")] <- factor(floor(df[,paste0(player, "Elo")]/100), ordered=TRUE)
+    
+    # levels (e.g. 1400 instead of 14)
+    levels(df[,paste0(player, "Elo_bucket")]) <- as.numeric(levels(df[,paste0(player, "Elo_bucket")]))*100
+  }
+  
+  # out
+  print("Added variables WhiteElo_bucket and BlackElo_bucket")
+  return(df)
+}
