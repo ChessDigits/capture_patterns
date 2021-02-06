@@ -162,6 +162,25 @@ add_cumulative_captures_at_each_ply <- function(df)
 }
 
 
+# replace with NA if game had ended
+replace_capture_vars_with_NA_after_game_ended <- function(df, var_prefix="Cumcap")
+{
+  # columns to work on
+  cols <- grep(var_prefix, colnames(df), value=T)
+  cols_ply <- as.numeric(gsub(pattern = paste0(var_prefix, "_ply_"), replacement = "", x = cols))
+  
+  # do
+  for (i in 1:length(cols))
+  {
+    df[df$last_ply < cols_ply[i], cols[i]] <- NA
+  }
+  
+  # out
+  print(paste0("Replaced ", var_prefix, "_ply_", " variables with NA after game ended"))
+  return(df)
+  
+}
+
 
 #### plots ####
 # helper fn

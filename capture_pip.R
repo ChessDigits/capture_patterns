@@ -18,6 +18,6 @@ df <- add_rating_buckets(df)
 df <- add_last_ply(df)
 df <- add_capture_indicator_at_each_ply(df)
 df <- add_cumulative_captures_at_each_ply(df)
+df2 <- replace_capture_vars_with_NA_after_game_ended(df, var_prefix="Cumcap")
 
-# need to do something about end of games: replace values with NA when game has ended
-# or keep only games that hadn't ended yet at max ply
+# keep only games that hadn't ended yet at max ply?!
