@@ -109,8 +109,33 @@ add_capture_indicator_at_each_ply <- function(df, first_ply=1, last_ply=30*2)
 }
 
 
-add_cumulative_captures_at_each_ply <- function()
+add_cumulative_captures_at_each_ply <- function(df)
 {
+  # remove previous capture indicators if any
+  df <- df[,!grepl("Cumcap_ply_", colnames(df))]
+  
+  # columns
+  cols <- colnames(df)[substr(colnames(df), 1, 12) == "Capture_ply_"]
+  cols_ply <- as.numeric(gsub(pattern = "Capture_ply_", replacement = "", x = cols))
+  df_cols <- df[cols]
+  
+  # placeholder dataframe
+  cap <- data.frame(matrix(NA, nrow=nrow(df), ncol=length(cols)))
+  
+  # add cumulative sum
+  for (i in 1:length(cols))
+  {
+    .df <- df_cols[1:i]
+    cap[,i] <- apply(.df, 1, sum, na.rm=TRUE)
+  }
+  
+  # add to df
+  colnames(cap) <- paste0("Cumcap_ply_", cols_ply[1]:cols_ply[ncol(cap)])
+  df <- cbind(df, cap)
+  
+  # out
+  print(paste0("Added columns Cumcap_ply_", cols_ply[1], " to Cumcap_ply_", cols_ply[ncol(cap)]))
+  return(df)
   
 }
 
