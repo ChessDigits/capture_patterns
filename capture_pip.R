@@ -15,7 +15,9 @@ df <- restrict_by_rating_differential(df, max_diff=100)
 df <- restrict_by_rating(df, player = "White", min_rating=800, max_rating=2300)
 df <- restrict_by_rating(df, player = "Black", min_rating=800, max_rating=2300)
 df <- add_rating_buckets(df)
+df <- add_last_ply(df)
 df <- add_capture_indicator_at_each_ply(df)
 df <- add_cumulative_captures_at_each_ply(df)
 
 # need to do something about end of games: replace values with NA when game has ended
+# or keep only games that hadn't ended yet at max ply

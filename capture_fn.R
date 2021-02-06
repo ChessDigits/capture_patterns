@@ -13,6 +13,10 @@ https://web.chessdigits.com/articles/...
 library(ggplot2)
 
 
+#### helper fn ####
+view <- utils::View
+
+
 #### load data ####
 load_data <- function(k_games=c(200,500), use_local_file=TRUE)
 {
@@ -42,6 +46,24 @@ remove_abnormal_termination <- function(df)
   print("Removed abnormal terminations:")
   print(remove)
   print(paste("Total games removed:", n_pre - n_post))
+  return(df)
+}
+
+# last move
+add_last_ply <- function(df)
+{
+  # using move
+  cols <- grep("Move_ply_", colnames(df))
+  last_ply <- apply(df[cols], 1, function(r) which(r == "" | is.na(r))[1]-1) # -1 bc otherwise it indicates first ply at which no move
+  
+  # replace NA with max ply in df
+  last_ply[is.na(last_ply)] <- length(cols)
+  
+  # add to df
+  df$last_ply <- last_ply
+  
+  # out
+  print("Added variable last_ply")
   return(df)
 }
 
@@ -111,10 +133,10 @@ add_capture_indicator_at_each_ply <- function(df, first_ply=1, last_ply=30*2)
 
 add_cumulative_captures_at_each_ply <- function(df)
 {
-  # remove previous capture indicators if any
+  # remove previous cumulative capture columns if any
   df <- df[,!grepl("Cumcap_ply_", colnames(df))]
   
-  # columns
+  # capture indicator columns
   cols <- colnames(df)[substr(colnames(df), 1, 12) == "Capture_ply_"]
   cols_ply <- as.numeric(gsub(pattern = "Capture_ply_", replacement = "", x = cols))
   df_cols <- df[cols]
