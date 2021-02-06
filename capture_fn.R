@@ -235,6 +235,6 @@ get_plot_cumulative_captures_by <- function(df, by=NULL, by_label=NULL, linetype
     #ylim(0,ymax) +
     labs(color=by_label, linetype=by_label, x=labs$x, y=labs$y) +
     scale_y_continuous(breaks=1:50)+#, limits=c(0,ymax)) + 
-    scale_x_continuous(breaks=seq(1, 100, 2), labels=seq(1, 50, 1))+
+    scale_x_continuous(breaks=seq(1, 200, 2), labels=seq(1, 100, 1))+
     theme(text=element_text(size=15))
 }
