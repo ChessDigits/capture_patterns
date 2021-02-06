@@ -184,12 +184,8 @@ replace_capture_vars_with_NA_after_game_ended <- function(df, var_prefix="Cumcap
 
 #### plots ####
 # helper fn
-get_average_capture_at_each_ply_by <- function(df, by=NULL, by_label=NULL)
+get_average_capture_at_each_ply_by <- function(df, by=NULL)
 {
-  # groups
-  if(is.null(by)) { by <- "All_Games"; df[,by] <- "All Games" }
-  if(is.null(by_label)) by_label <- by
-  
   # set up: columns and list
   cols <- grep("Cumcap_ply_", colnames(df), value=T)
   cols_ply <- as.numeric(gsub(pattern = paste0("Cumcap_ply_"), replacement = "", x = cols))
@@ -204,7 +200,7 @@ get_average_capture_at_each_ply_by <- function(df, by=NULL, by_label=NULL)
       mean, na.rm=TRUE
     )
     agg$Ply <- cols_ply[i]
-    names(agg)[which(names(agg)=="Group")] <- by_label
+    names(agg)[which(names(agg)=="Group")] <- by
     avg_cap[[cols[i]]] <- agg
   }
   
@@ -217,4 +213,28 @@ get_average_capture_at_each_ply_by <- function(df, by=NULL, by_label=NULL)
 }
 
 # plot
-
+get_plot_cumulative_captures_by <- function(df, by=NULL, by_label=NULL, linetype=TRUE)
+{
+  # groups
+  if(is.null(by)) { by <- "All_Games"; df[,by] <- "All Games" }
+  if(is.null(by_label)) by_label <- by
+  
+  # get points to plot
+  agg <- get_average_capture_at_each_ply_by(df, by=by)
+  
+  # config plot
+  #ymax <- 55
+  labs <- list(
+    x="Move",
+    y="Total Captures"
+  )
+  #yticks <- seq(0,ymax,5)
+  
+  # plot
+  ggplot(agg, aes_string(x="Ply", y="Cumulative_Capture", group=by, color=by)) + geom_line(aes_string(linetype=if(by %in% c("WhiteElo_bucket", "BlackElo_bucket") | !linetype) NULL else by), size=2) + 
+    #ylim(0,ymax) +
+    labs(color=by_label, linetype=by_label, x=labs$x, y=labs$y) +
+    scale_y_continuous(breaks=1:50)+#, limits=c(0,ymax)) + 
+    scale_x_continuous(breaks=seq(1, 100, 2), labels=seq(1, 50, 1))+
+    theme(text=element_text(size=15))
+}
