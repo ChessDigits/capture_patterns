@@ -184,9 +184,37 @@ replace_capture_vars_with_NA_after_game_ended <- function(df, var_prefix="Cumcap
 
 #### plots ####
 # helper fn
-get_average_capture_at_each_ply_by <- function(by=rating)
+get_average_capture_at_each_ply_by <- function(df, by=NULL, by_label=NULL)
 {
+  # groups
+  if(is.null(by)) { by <- "All_Games"; df[,by] <- "All Games" }
+  if(is.null(by_label)) by_label <- by
+  
+  # set up: columns and list
+  cols <- grep("Cumcap_ply_", colnames(df), value=T)
+  cols_ply <- as.numeric(gsub(pattern = paste0("Cumcap_ply_"), replacement = "", x = cols))
+  avg_cap <- list()
+
+  # get values for each column
+  for (i in 1:length(cols))
+  {
+    agg <- aggregate(
+      list(Cumulative_Capture=df[,cols[i]]),
+      list(Group=df[,by]),
+      mean, na.rm=TRUE
+    )
+    agg$Ply <- cols_ply[i]
+    names(agg)[which(names(agg)=="Group")] <- by_label
+    avg_cap[[cols[i]]] <- agg
+  }
+  
+  # combine
+  avg_cap <- do.call(rbind, avg_cap)
+  
+  # out
+  return(avg_cap)
   
 }
 
 # plot
+
