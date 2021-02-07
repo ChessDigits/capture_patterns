@@ -298,13 +298,13 @@ get_plot_cumulative_captures_by <- function(df, by=NULL, by_label=NULL, linetype
 
 
 # helper fn
-get_prop_result_by <- function(df, result="1-0", by=NULL)
+get_percent_result_by <- function(df, result="1-0", by=NULL)
 {
   
   agg <- aggregate(
     list(Percent_Winning=df$Result),
     list(Group=df[,by]),
-    function(x) sum(x==result, na.rm=T)/length(x)
+    function(x) sum(x==result, na.rm=T)/length(x)*100 # percent
   )
   names(agg)[which(names(agg)=="Group")] <- by
   
@@ -335,7 +335,7 @@ get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, linetype=TR
   for (trade in unique(df[,"trades_initiated_diff"]))
   {
     .df <- df[df[,"trades_initiated_diff"]==trade,]
-    agg <- get_prop_result_by(.df, by=by) # agg helper fn here
+    agg <- get_percent_result_by(.df, by=by) # agg helper fn here
     agg[,"trades_initiated_diff"] <- trade
     aggs[[as.character(trade)]] <- agg
   }
