@@ -196,20 +196,12 @@ add_trades_initiated <- function(df, last_ply=200)
     row <- row[1:max_ply]
     captures <- row
     capture_next_move <- c(row[-1], F)
-    capture_previous_move <- c(F, row)
+    capture_previous_move <- c(F, row[-length(row)])
     
     # do
-    init$w[i] <- 0
-    init$b[i] <- 0
-    for (j in which(captures)) # each capture indicator for that row
-    {
-      if (!capture_previous_move[j] & capture_next_move[j]) # looking at: no_x, x, x, anything
-      {
-        black <- j %% 2 == 0
-        if(black) init$b[i] <- init$b[i]+1 else init$w[i] <- init$w[i]+1
-      }
-    }
-    
+    initiated <- which(captures & !capture_previous_move & capture_next_move)
+    init$b[i] <- sum(initiated %% 2 == 0)
+    init$w[i] <- sum(initiated %% 2 != 0)
     
   } # end each row
   
