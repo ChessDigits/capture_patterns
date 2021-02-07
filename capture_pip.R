@@ -26,4 +26,6 @@ get_plot_cumulative_captures_by(df, by="WhiteElo_bucket", by_label="Rating")
 # keep only games that hadn't ended yet at max ply?!
 
 # trades initiated
+x<-Sys.time()
 df <- add_trades_initiated(df, last_ply = 200)
+Sys.time()-x
