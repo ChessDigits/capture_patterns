@@ -313,3 +313,49 @@ get_prop_result_by <- function(df, result="1-0", by=NULL)
   
 }
 
+
+# plot trades initiated by
+get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, linetype=TRUE)
+{
+  "
+  this could use refactoring
+  a lot of repetition with get_plot_cumulative_captures_by() above
+  
+  "
+  # groups
+  if(is.null(by)) { by <- "All_Games"; df[,by] <- "All Games" }
+  if(is.null(by_label)) by_label <- by
+  
+  # get points to plot
+  "
+  this could be made into a function, argument = variable to split by
+  (here trades initiated)
+  "
+  aggs <- list()
+  for (trade in unique(df[,"trades_initiated_diff"]))
+  {
+    .df <- df[df[,"trades_initiated_diff"]==trade,]
+    agg <- get_prop_result_by(.df, by=by) # agg helper fn here
+    agg[,"trades_initiated_diff"] <- trade
+    aggs[[as.character(trade)]] <- agg
+  }
+  agg <- do.call(rbind, aggs)
+
+  
+  # config plot
+  #ymax <- 55
+  labs <- list(
+    x="Difference in Trades Initiated",
+    y="Percent Winning (%)"
+  )
+  #yticks <- seq(0,ymax,5)
+  
+  # plot
+  ggplot(agg, aes_string(x="trades_initiated_diff", y="Percent_Winning", group=by, color=by)) + geom_line(aes_string(linetype=if(by %in% c("WhiteElo_bucket", "BlackElo_bucket") | !linetype) NULL else by), size=2) + 
+    #ylim(0,ymax) +
+    labs(color=by_label, linetype=by_label, x=labs$x, y=labs$y) +
+    #scale_y_continuous(breaks=1:50)+#, limits=c(0,ymax)) + 
+    #scale_x_continuous(breaks=seq(1, 200, 2), labels=seq(1, 100, 1))+
+    theme(text=element_text(size=15))
+  
+}

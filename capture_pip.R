@@ -30,3 +30,5 @@ df <- add_trades_initiated(df, last_ply = 200)
 df <- add_trades_initiated_differential(df)
 df <- remove_results(df, results = "1/2-1/2")
 plot(factor(df$trades_initiated_diff, ordered = T), df$Result)
+.df <- df[df$trades_initiated_diff>= -5 & df$trades_initiated_diff<= 5,]
+get_plot_trades_initiated_by(.df, by="WhiteElo_bucket", by_label = "Rating")
