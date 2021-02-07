@@ -238,6 +238,19 @@ add_trades_initiated_differential <- function(df)
 }
 
 
+# restrict by trades initiated differential
+restrict_by_trades_initiated_differential  <- function(df, min_diff=-5, max_diff=5)
+{
+  n_pre <- nrow(df)
+  df <- df[df["trades_initiated_diff"] <= max_diff & df["trades_initiated_diff"] >= min_diff,]
+  n_post <- nrow(df)
+  
+  # out
+  print(paste0("Removed games where trades initiated differential is between ", min_diff, " and ", max_diff, " (n pre = ", n_pre, ", n post = ", n_post, ")"))
+  return(df)
+}
+
+
 
 #### plots ####
 # helper fn

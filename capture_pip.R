@@ -20,7 +20,7 @@ df <- add_last_ply(df)
 df <- add_capture_indicator_at_each_ply(df, first_ply = 1, last_ply = 60)
 df <- add_cumulative_captures_at_each_ply(df)
 df <- replace_capture_vars_with_NA_after_game_ended(df, var_prefix="Cumcap")
-get_plot_cumulative_captures_by(df, by="WhiteElo_bucket", by_label="Rating")
+get_plot_cumulative_captures_by(df, by="WhiteElo_bucket", by_label="Rating") # graph here
 #get_plot_cumulative_captures_by(df, by="Category", by_label="Time Control")
 
 # keep only games that hadn't ended yet at max ply?!
@@ -31,7 +31,7 @@ df <- add_trades_initiated_differential(df)
 df <- remove_results(df, results = "1/2-1/2")
 
 # subset, too few games with large discrepancy in trades initiated
-.df <- df[df$trades_initiated_diff>= -5 & df$trades_initiated_diff<= 5,]
+.df <- restrict_by_trades_initiated_differential(df, min_diff = -5, max_diff = 5)# df[df$trades_initiated_diff>= -5 & df$trades_initiated_diff<= 5,]
 get_plot_trades_initiated_by(.df, by="WhiteElo_bucket", by_label = "Rating")
 get_plot_trades_initiated_by(.df, by="Category", by_label = "Time Control")
-get_plot_trades_initiated_by(.df)#, by="Category", by_label = "Time Control")
+get_plot_trades_initiated_by(.df) # graph here
