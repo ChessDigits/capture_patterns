@@ -33,5 +33,8 @@ df <- remove_results(df, results = "1/2-1/2")
 # subset, too few games with large discrepancy in trades initiated
 .df <- restrict_by_trades_initiated_differential(df, min_diff = -5, max_diff = 5)# df[df$trades_initiated_diff>= -5 & df$trades_initiated_diff<= 5,]
 get_plot_trades_initiated_by(.df, by="WhiteElo_bucket", by_label = "Rating")
+get_plot_trades_initiated_by(.df, by="WhiteElo_bucket", by_label = "Rating", exclude_time_forfeits = TRUE) # bof difference
 get_plot_trades_initiated_by(.df, by="Category", by_label = "Time Control")
+get_plot_trades_initiated_by(.df, by="Category", by_label = "Time Control", exclude_time_forfeits = TRUE) # bof difference
 get_plot_trades_initiated_by(.df) # graph here
+get_plot_trades_initiated_by(.df, exclude_time_forfeits = TRUE) # more extreme and straighter

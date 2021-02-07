@@ -328,13 +328,16 @@ get_percent_result_by <- function(df, result="1-0", by=NULL)
 
 
 # plot trades initiated by
-get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, linetype=TRUE)
+get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, exclude_time_forfeits=FALSE, linetype=TRUE)
 {
   "
   this could use refactoring
   a lot of repetition with get_plot_cumulative_captures_by() above
   
   "
+  # requested data filtering
+  if(exclude_time_forfeits) df <- df[df$Termination != "Time forfeit",]
+  
   # groups
   if(is.null(by)) { by <- "All_Games"; df[,by] <- "All Games" }
   if(is.null(by_label)) by_label <- by
