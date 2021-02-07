@@ -182,6 +182,46 @@ replace_capture_vars_with_NA_after_game_ended <- function(df, var_prefix="Cumcap
 }
 
 
+# add number of trades initiated
+add_trades_initiated <- function(df, last_ply=200)
+{
+  df_with_selected_captures <- add_capture_indicator_at_each_ply(df, first_ply=1, last_ply=last_ply)
+  cols <- grep("Capture_ply_", colnames(df_with_selected_captures), value=T)
+  
+  for (i in 1:nrow(df)) # each row
+  {
+    row <- as.logical(df_with_selected_captures[i,cols])
+    max_ply <- min(df$last_ply[i], length(row))
+    row <- row[1:max_ply]
+    captures <- row
+    capture_next_move <- c(row[-1], F)
+    capture_previous_move <- c(F, row)
+    
+    # do
+    init <- list(w=0, b=0)
+    for (j in which(captures)) # each capture indicator for that row
+    {
+      if (!capture_previous_move[j] & capture_next_move[j]) # looking at: no_x, x, x, anything
+      {
+        black <- j %% 2 == 0
+        if(black) init$b <- init$b+1 else init$w <- init$w+1
+      }
+    }
+    
+    # add to df
+    df[i,"White_trades_initiated"] <- init$w
+    df[i,"Black_trades_initiated"] <- init$b
+    
+  } # end each row
+  
+  # out
+  print("Added variables White_trades_initiated and Black_trades_initiated")
+  return(df)
+  
+}
+
+
+
 #### plots ####
 # helper fn
 get_average_capture_at_each_ply_by <- function(df, by=NULL)
