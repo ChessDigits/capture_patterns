@@ -49,6 +49,20 @@ remove_abnormal_termination <- function(df)
   return(df)
 }
 
+# remove results
+remove_results <- function(df, results)
+{
+  n_pre <- nrow(df)
+  df <- df[!df$Result %in% results,]
+  df$Result <- factor(df$Result) # to ensure non-zero levels
+  n_post <- nrow(df)
+  # out
+  print("Removed results:")
+  print(results)
+  print(paste("Total games removed:", n_pre - n_post))
+  return(df)
+}
+
 # last move
 add_last_ply <- function(df)
 {
@@ -281,3 +295,21 @@ get_plot_cumulative_captures_by <- function(df, by=NULL, by_label=NULL, linetype
     scale_x_continuous(breaks=seq(1, 200, 2), labels=seq(1, 100, 1))+
     theme(text=element_text(size=15))
 }
+
+
+# helper fn
+get_prop_result_by <- function(df, result="1-0", by=NULL)
+{
+  
+  agg <- aggregate(
+    list(Percent_Winning=df$Result),
+    list(Group=df[,by]),
+    function(x) sum(x==result, na.rm=T)/length(x)
+  )
+  names(agg)[which(names(agg)=="Group")] <- by
+  
+  # out
+  return(agg)
+  
+}
+
