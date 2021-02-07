@@ -215,6 +215,14 @@ add_trades_initiated <- function(df, last_ply=200)
   
 }
 
+# trades diff
+add_trades_initiated_differential <- function(df)
+{
+  df$trades_initiated_diff <- df$White_trades_initiated - df$Black_trades_initiated
+  print("Added variable trades_initiated_diff (White minus Black)")
+  return(df)
+}
+
 
 
 #### plots ####
