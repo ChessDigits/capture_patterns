@@ -301,12 +301,13 @@ get_plot_cumulative_captures_by <- function(df, by=NULL, by_label=NULL, linetype
   #yticks <- seq(0,ymax,5)
   
   # plot
+  if(by=="All_Games") legend_include<-"none" else legend_include<-NULL
   ggplot(agg, aes_string(x="Ply", y="Cumulative_Capture", group=by, color=by)) + geom_line(aes_string(linetype=if(by %in% c("WhiteElo_bucket", "BlackElo_bucket") | !linetype) NULL else by), size=2) + 
     #ylim(0,ymax) +
     labs(color=by_label, linetype=by_label, x=labs$x, y=labs$y) +
     scale_y_continuous(breaks=1:50)+#, limits=c(0,ymax)) + 
     scale_x_continuous(breaks=seq(1, 200, 2), labels=seq(1, 100, 1))+
-    theme(text=element_text(size=15))
+    theme(text=element_text(size=15), legend.position = legend_include)
 }
 
 
@@ -367,11 +368,12 @@ get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, exclude_tim
   #yticks <- seq(0,ymax,5)
   
   # plot
+  if(by=="All_Games") legend_include<-"none" else legend_include<-NULL
   ggplot(agg, aes_string(x="trades_initiated_diff", y="Percent_Winning", group=by, color=by)) + geom_line(aes_string(linetype=if(by %in% c("WhiteElo_bucket", "BlackElo_bucket") | !linetype) NULL else by), size=2) + 
     #ylim(0,ymax) +
     labs(color=by_label, linetype=by_label, x=labs$x, y=labs$y) +
     #scale_y_continuous(breaks=1:50)+#, limits=c(0,ymax)) + 
     #scale_x_continuous(breaks=seq(1, 200, 2), labels=seq(1, 100, 1))+
-    theme(text=element_text(size=15))
+    theme(text=element_text(size=15), legend.position=legend_include)
   
 }

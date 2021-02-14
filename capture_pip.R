@@ -9,8 +9,8 @@ https://web.chessdigits.com/articles/...
 "
 
 df <- load_data(k_games=200, use_local_file=TRUE)
-bu<-df
-df <- df[sample(1:nrow(df), size = 10000, replace = F),]
+#bu<-df
+#df <- df[sample(1:nrow(df), size = 10000, replace = F),]
 df <- remove_abnormal_termination(df)
 df <- restrict_by_rating_differential(df, max_diff=100)
 df <- restrict_by_rating(df, player = "White", min_rating=800, max_rating=2300)
