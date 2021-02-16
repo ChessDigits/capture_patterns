@@ -4,7 +4,7 @@ Chess Digits
 Capture Patterns
 
 Functions for article:
-https://web.chessdigits.com/articles/...
+https://web.chessdigits.com/articles/to-trade-or-not-to-trade
 
 "
 
