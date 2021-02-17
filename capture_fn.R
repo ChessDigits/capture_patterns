@@ -329,7 +329,7 @@ get_percent_result_by <- function(df, result="1-0", by=NULL)
 
 
 # plot trades initiated by
-get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, exclude_time_forfeits=FALSE, linetype=TRUE)
+get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, min_rating=NULL, max_rating=NULL, exclude_time_forfeits=FALSE, linetype=TRUE)
 {
   "
   this could use refactoring
@@ -338,6 +338,12 @@ get_plot_trades_initiated_by <- function(df, by=NULL, by_label=NULL, exclude_tim
   "
   # requested data filtering
   if(exclude_time_forfeits) df <- df[df$Termination != "Time forfeit",]
+  if(!is.null(min_rating) | !is.null(max_rating))
+  {
+    df <- restrict_by_rating(df, player = "White", min_rating=min_rating, max_rating=max_rating)
+    df <- restrict_by_rating(df, player = "Black", min_rating=min_rating, max_rating=max_rating)
+  }
+  
   
   # groups
   if(is.null(by)) { by <- "All_Games"; df[,by] <- "All Games" }
